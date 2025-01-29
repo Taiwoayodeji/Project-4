@@ -6,8 +6,8 @@ export default function SignUp({ setUser }) {
   const [formData, setFormData] = useState({
     user_name: '',
     user_password: '',
-    user_email: '', 
-    confirm_password: '', 
+    user_email: '',
+    confirm_password: '',
   });
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -19,28 +19,42 @@ export default function SignUp({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+    setErrorMessage(''); 
+
+    if (formData.user_password !== formData.confirm_password) {
+      setErrorMessage('Passwords do not match.');
+      return;
+    }
+
     try {
-      const response = await axios.post('http://localhost:3001/signup', {
+      const response = await axios.post('http://localhost:3001/api/users', {
         user_name: formData.user_name,
-        email: formData.email,
-        password: formData.user_password,
+        user_password: formData.user_password,
+        user_email: formData.user_email,
       });
-  
-      if (response.data.success) {
-        console.log("Sign-up successful!", response.data);
+
+      if (response.data) {
+        console.log('Sign-up successful:', response.data);
+        setErrorMessage(''); 
+        setUser({
+          user_id: response.data.user_id,
+          user_name: response.data.user_name,
+        });
       }
     } catch (error) {
-      console.error("Sign-up error:", error);
-      setError("An error occurred during sign-up. Please try again.");
+      console.error('Sign-up error:', error);
+      setErrorMessage('An error occurred during sign-up. Please try again.');
     }
-  };  
+  };
 
   return (
     <Container className="mt-5">
       <Form noValidate onSubmit={handleSubmit} className="p-4 custom-form">
         <h2 className="text-center mb-4">Create an Account</h2>
+
+        {/* Display error message if there's an error */}
         {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+
         <Row className="">
           <Form.Group as={Col} md="12">
             <Form.Label>Username</Form.Label>
@@ -54,6 +68,7 @@ export default function SignUp({ setUser }) {
             />
           </Form.Group>
         </Row>
+
         <Row className="">
           <Form.Group as={Col} md="12">
             <Form.Label>Email</Form.Label>
@@ -67,6 +82,7 @@ export default function SignUp({ setUser }) {
             />
           </Form.Group>
         </Row>
+
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Password</Form.Label>
@@ -80,6 +96,7 @@ export default function SignUp({ setUser }) {
             />
           </Form.Group>
         </Row>
+
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
             <Form.Label>Confirm Password</Form.Label>
@@ -93,7 +110,10 @@ export default function SignUp({ setUser }) {
             />
           </Form.Group>
         </Row>
-        <Button type="submit" className="w-100">Sign Up</Button>
+
+        <Button type="submit" className="w-100">
+          Sign Up
+        </Button>
       </Form>
     </Container>
   );
