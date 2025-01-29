@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./component/Login/Login";
+import Signup from "./component/Signup/Signup";
+import NavbarMenu from "./component/NavbarMenu/NavbarMenu";
+import ListQuestions from "./component/ListQuestions/ListQuestions";
+import "./styles/style.css";
 
 function App() {
+  const [user, setUser] = useState({
+    user_id: 1,
+    user_name: "",
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <NavbarMenu user={user} />
+      <Routes>
+        <Route
+          path="/login"
+          element={<Login user={user} setUser={setUser} />}
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route
+          path="/questions"
+          element={
+            !user.user_id ? (
+              <Login user={user} setUser={setUser} />
+            ) : (
+              <ListQuestions user={user} />
+            )
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
