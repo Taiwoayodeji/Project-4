@@ -3,7 +3,6 @@ import db from "../dbConnection.js";
 
 const Router = express.Router();
 
-// GET: Fetch a user by username and password (Login)
 Router.get("/", (req, res) => {
   const { user_name, user_password } = req.query;
 
@@ -16,7 +15,7 @@ Router.get("/", (req, res) => {
         res.status(500).send("Error in the query");
       } else {
         if (result.length > 0) {
-          res.send(result[0]); // Return the user data
+          res.send(result[0]);
         } else {
           res.status(404).send("User not found");
         }
@@ -25,7 +24,6 @@ Router.get("/", (req, res) => {
   );
 });
 
-// POST: Register a new user
 Router.post("/", (req, res) => {
   const { user_name, user_password } = req.body;
 

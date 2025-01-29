@@ -3,7 +3,6 @@ import db from "../dbConnection.js";
 
 const Router = express.Router();
 
-// GET: Fetch answers for a specific question and user
 Router.get("/", (req, res) => {
   const { question_id, user_id } = req.query;
 
@@ -18,13 +17,12 @@ Router.get("/", (req, res) => {
         console.log("Error in fetching answers", err);
         res.status(500).send("Error in the query");
       } else {
-        res.send(result); // Return the answers
+        res.send(result);
       }
     }
   );
 });
 
-// POST: Post a new answer
 Router.post("/", (req, res) => {
   const { question_id, user_id, body } = req.body;
 

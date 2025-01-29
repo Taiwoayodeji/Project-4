@@ -3,19 +3,17 @@ import db from "../dbConnection.js";
 
 const Router = express.Router();
 
-// GET: Fetch all questions
 Router.get("/", (req, res) => {
   db.query("SELECT * FROM Questions", (err, result) => {
     if (err) {
       console.log("Error in fetching questions", err);
       res.status(500).send("Error in the query");
     } else {
-      res.send(result); // Return all questions
+      res.send(result);
     }
   });
 });
 
-// POST: Post a new question
 Router.post("/", (req, res) => {
   const { user_id, title, body } = req.body;
 
