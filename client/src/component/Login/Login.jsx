@@ -7,7 +7,7 @@ export default function Login({ setUser }) {
     user_name: '',
     user_password: '',
   });
-  const [error, setError] = useState(null); 
+  const [error, setError] = useState(null);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -16,19 +16,28 @@ export default function Login({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setError(null); 
+    setError(null);
 
     try {
-      const { data } = await axios.get('http://localhost:3001/login', formData);
-      
-      
-      if (data.success) {
-        setUser({ user_id: data.user.user_id, user_name: data.user.user_name });
-        console.log('Login successful:', data.user);
+      const response = await axios.get('http://localhost:3001/api/users', {
+        params: {
+          user_name: formData.user_name,
+          user_password: formData.user_password,
+        },
+      });
+
+      if (response.data) {
+        setUser({
+          user_id: response.data.user_id,
+          user_name: response.data.user_name,
+        });
+        console.log('Login successful:', response.data);
+      } else {
+        setError('Invalid username or password');
       }
     } catch (error) {
       console.error('Login error:', error);
-      setError('Invalid username or password');
+      setError('Login failed. Please try again.');
     }
   };
 
@@ -37,7 +46,8 @@ export default function Login({ setUser }) {
       <Form noValidate onSubmit={handleSubmit} className="p-4 custom-form">
         <h2 className="text-center mb-4">Welcome Back</h2>
 
-        {error && <div className="alert alert-danger">{error}</div>} {/* Display error */}
+        {/* Display error message if there's an error */}
+        {error && <div className="alert alert-danger">{error}</div>}
 
         <Row className="mb-3">
           <Form.Group as={Col} md="12">
@@ -65,7 +75,9 @@ export default function Login({ setUser }) {
           </Form.Group>
         </Row>
 
-        <Button type="submit" className="w-100">Login</Button>
+        <Button type="submit" className="w-100">
+          Login
+        </Button>
       </Form>
     </Container>
   );

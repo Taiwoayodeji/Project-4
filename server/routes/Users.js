@@ -15,7 +15,7 @@ Router.get("/", (req, res) => {
         res.status(500).send("Error in the query");
       } else {
         if (result.length > 0) {
-          res.send(result[0]);
+          res.send(result[0]); // Return the user data
         } else {
           res.status(404).send("User not found");
         }
@@ -23,22 +23,3 @@ Router.get("/", (req, res) => {
     }
   );
 });
-
-Router.post("/", (req, res) => {
-  const { user_name, user_password } = req.body;
-
-  db.query(
-    "INSERT INTO users (user_name, user_password) VALUES (?, ?)",
-    [user_name, user_password],
-    (err, result) => {
-      if (err) {
-        console.log("Error in adding user", err);
-        res.status(500).send("Error adding user");
-      } else {
-        res.status(201).send("User added successfully");
-      }
-    }
-  );
-});
-
-export default Router;
