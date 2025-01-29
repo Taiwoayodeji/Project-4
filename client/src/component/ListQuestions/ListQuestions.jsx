@@ -9,7 +9,7 @@ const QuestionsList = () => {
 
   useEffect(() => {
     
-    axios.get('http://localhost:3001/questions')
+    axios.get('http://localhost:3001/api/questions')
       .then(response => {
         setQuestions(response.data); 
         setLoading(false); 
@@ -25,8 +25,7 @@ const QuestionsList = () => {
 
   return (
     <div>
-      <h1>Questions</h1>
-      <ul>
+<h2 className="text-center mb-4">Questions</h2>      <ul>
         {questions.map((question) => (
           <li key={question.question_id}>
             <h3>{question.title}</h3>

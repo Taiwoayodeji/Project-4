@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Form, Row, Container } from 'react-bootstrap';
 import axios from 'axios';
 
-export default function SignUp({ setUser }) {
+export default function SignUp() {
   const [formData, setFormData] = useState({
     user_name: '',
     user_password: '',
@@ -19,27 +19,27 @@ export default function SignUp({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); 
+    setErrorMessage(''); // Clear previous errors
 
+    // Check if passwords match
     if (formData.user_password !== formData.confirm_password) {
       setErrorMessage('Passwords do not match.');
       return;
     }
 
     try {
+      // Send a POST request to the backend
       const response = await axios.post('http://localhost:3001/api/users', {
         user_name: formData.user_name,
         user_password: formData.user_password,
         user_email: formData.user_email,
       });
 
+      // Check if the response indicates success
       if (response.data) {
         console.log('Sign-up successful:', response.data);
-        setErrorMessage(''); 
-        setUser({
-          user_id: response.data.user_id,
-          user_name: response.data.user_name,
-        });
+        setErrorMessage(''); // Clear any previous errors
+        // Optionally, redirect the user to the login page or show a success message
       }
     } catch (error) {
       console.error('Sign-up error:', error);
