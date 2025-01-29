@@ -19,7 +19,7 @@ export default function Login({ setUser }) {
     setError(null); 
 
     try {
-      const { data } = await axios.post('http://localhost:3001/login', formData);
+      const { data } = await axios.get('http://localhost:3001/login', formData);
       
       
       if (data.success) {
