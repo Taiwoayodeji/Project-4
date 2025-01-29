@@ -19,28 +19,22 @@ export default function SignUp({ setUser }) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     
-    if (formData.user_password !== formData.confirm_password) {
-      setErrorMessage("Passwords don't match");
-      return;
-    }
-
     try {
-      const { data } = await axios.post('http://localhost:3001/signup', formData);
-
-      if (data.success) {
-        setUser({ user_id: data.user.user_id, user_name: data.user.user_name });
-        console.log('Sign-up successful:', data.user);
-      } else {
-        setErrorMessage(data.message); 
-        console.error('Sign-up failed:', data.message);
+      const response = await axios.post('http://localhost:3001/signup', {
+        user_name: formData.user_name,
+        email: formData.email,
+        password: formData.user_password,
+      });
+  
+      if (response.data.success) {
+        console.log("Sign-up successful!", response.data);
       }
     } catch (error) {
-      console.error('Sign-up error:', error);
-      setErrorMessage('An error occurred during sign-up. Please try again.');
+      console.error("Sign-up error:", error);
+      setError("An error occurred during sign-up. Please try again.");
     }
-  };
+  };  
 
   return (
     <Container className="mt-5">
