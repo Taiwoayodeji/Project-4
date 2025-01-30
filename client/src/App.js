@@ -10,13 +10,21 @@ import "./styles/style.css";
 
 function App() {
   const [user, setUser] = useState({
-    user_id: null,
+    user_id: null, // Initially, user_id should be null (not logged in)
     user_name: "",
   });
 
+  const handleSignOut = () => {
+    // Clear user data and redirect to login page
+    setUser({
+      user_id: null,
+      user_name: "",
+    });
+  };
+
   return (
     <Router>
-      <NavbarMenu user={user} />
+      <NavbarMenu user={user} handleSignOut={handleSignOut} />
       <Routes>
         <Route
           path="/login"
@@ -26,10 +34,10 @@ function App() {
         <Route
           path="/questions"
           element={
-            !user.user_id ? (
-              <Login user={user} setUser={setUser} />
-            ) : (
+            user.user_id ? (
               <ListQuestions user={user} />
+            ) : (
+              <Login user={user} setUser={setUser} />
             )
           }
         />
