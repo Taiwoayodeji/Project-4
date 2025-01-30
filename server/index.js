@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import userRouter from "./routes/Users.js";
 import questionRouter from "./routes/Questions.js";
 import answerRouter from "./routes/Answers.js";
-import db from "./config/database.js"; // Ensure you have a database connection file
+import db from "./dbConnection.js";
 
 dotenv.config();
 

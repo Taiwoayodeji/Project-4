@@ -1,20 +1,20 @@
 import express from "express";
 import db from "../dbConnection.js";
 
-const Router = express.Router();
+const questionRouter = express.Router();
 
-Router.get("/", (req, res) => {
+questionRouter.get("/", (req, res) => {
   db.query("SELECT * FROM Questions", (err, result) => {
     if (err) {
-      console.log("Error in fetching questions", err);
-      res.status(500).send("Error in the query");
+      console.error("Error in fetching questions", err);
+      res.status(500).json({ error: "Error in the query" });
     } else {
-      res.send(result);
+      res.json(result);
     }
   });
 });
 
-Router.post("/", (req, res) => {
+questionRouter.post("/", (req, res) => {
   const { user_id, title, body } = req.body;
 
   db.query(
@@ -22,13 +22,13 @@ Router.post("/", (req, res) => {
     [user_id, title, body],
     (err, result) => {
       if (err) {
-        console.log("Error in adding question", err);
-        res.status(500).send("Error adding question");
+        console.error("Error in adding question", err);
+        res.status(500).json({ error: "Error adding question" });
       } else {
-        res.status(201).send("Question added successfully");
+        res.status(201).json({ message: "Question added successfully" });
       }
     }
   );
 });
 
-export default Router;
+export default questionRouter;

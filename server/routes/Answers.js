@@ -1,9 +1,9 @@
 import express from "express";
 import db from "../dbConnection.js";
 
-const Router = express.Router();
+const answerRouter = express.Router();
 
-Router.get("/", (req, res) => {
+answerRouter.get("/", (req, res) => {
   const { question_id, user_id } = req.query;
 
   db.query(
@@ -14,16 +14,16 @@ Router.get("/", (req, res) => {
     [question_id, user_id],
     (err, result) => {
       if (err) {
-        console.log("Error in fetching answers", err);
-        res.status(500).send("Error in the query");
+        console.error("Error in fetching answers", err);
+        res.status(500).json({ error: "Error in the query" });
       } else {
-        res.send(result);
+        res.json(result);
       }
     }
   );
 });
 
-Router.post("/", (req, res) => {
+answerRouter.post("/", (req, res) => {
   const { question_id, user_id, body } = req.body;
 
   db.query(
@@ -31,13 +31,13 @@ Router.post("/", (req, res) => {
     [question_id, user_id, body],
     (err, result) => {
       if (err) {
-        console.log("Error in adding answer", err);
-        res.status(500).send("Error adding answer");
+        console.error("Error in adding answer", err);
+        res.status(500).json({ error: "Error adding answer" });
       } else {
-        res.status(201).send("Answer added successfully");
+        res.status(201).json({ message: "Answer added successfully" });
       }
     }
   );
 });
 
-export default Router;
+export default answerRouter;

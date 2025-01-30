@@ -1,9 +1,9 @@
 import express from "express";
 import db from "../dbConnection.js";
 
-const Router = express.Router();
+const userRouter = express.Router();
 
-Router.get("/", (req, res) => {
+userRouter.get("/", (req, res) => {
   const { user_name, user_password } = req.query;
 
   db.query(
@@ -11,15 +11,17 @@ Router.get("/", (req, res) => {
     [user_name, user_password],
     (err, result) => {
       if (err) {
-        console.log("Error in fetching user", err);
-        res.status(500).send("Error in the query");
+        console.error("Error in fetching user:", err);
+        res.status(500).json({ error: "Error in the query" });
       } else {
         if (result.length > 0) {
-          res.send(result[0]); // Return the user data
+          res.json(result[0]);
         } else {
-          res.status(404).send("User not found");
+          res.status(404).json({ error: "User not found" });
         }
       }
     }
   );
 });
+
+export default userRouter;
