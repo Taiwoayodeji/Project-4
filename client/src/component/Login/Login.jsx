@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Row, Container } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function Login({ setUser }) {
   const [formData, setFormData] = useState({
@@ -8,6 +9,7 @@ export default function Login({ setUser }) {
     user_password: '',
   });
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Use useNavigate hook for navigation
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,9 +33,10 @@ export default function Login({ setUser }) {
           user_id: response.data.user_id,
           user_name: response.data.user_name,
         });
-        console.log('Login successful:', response.data);
+        console.log('Login successful', response.data);
+        navigate("/questions"); // Redirect to questions page after successful login
       } else {
-        setError('Invalid username or password');
+        setError("Invalid username or password");
       }
     } catch (error) {
       console.error('Login error:', error);

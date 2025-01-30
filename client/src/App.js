@@ -10,7 +10,7 @@ import "./styles/style.css";
 
 function App() {
   const [user, setUser] = useState({
-    user_id: 1,
+    user_id: null,
     user_name: "",
   });
 
