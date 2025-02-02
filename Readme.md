@@ -31,7 +31,7 @@ This is a simple Q/A (Questions and Answers) web application where users can log
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Taiwoayodeji/Project-4.git
+   git clone https://github.com/Taiwoayodeji/Project-4
    cd Project-4
    ```
 2. Install dependencies:
@@ -50,6 +50,49 @@ This is a simple Q/A (Questions and Answers) web application where users can log
 - `POST /api/answers` - Submits an answer
 - `POST /api/login` - Handles user login
 - `POST /api/signup` - Handles user registration
+
+## Database Schema
+
+### Users Table
+
+```sql
+CREATE TABLE `Users` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(45) NOT NULL,
+  `user_password` varchar(255) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+### Questions Table
+
+```sql
+CREATE TABLE Questions (
+  question_id int NOT NULL AUTO_INCREMENT,
+  user_id int DEFAULT NULL,
+  title varchar(200) NOT NULL,
+  body text NOT NULL,
+  PRIMARY KEY (question_id),
+  KEY user_id (user_id),
+  CONSTRAINT questions_ibfk_1 FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
+
+### Answers Table
+
+```sql
+CREATE TABLE `Answers` (
+  `answer_id` int NOT NULL AUTO_INCREMENT,
+  `question_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `body` text NOT NULL,
+  PRIMARY KEY (`answer_id`),
+  KEY `question_id` (`question_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `Questions` (`question_id`) ON DELETE CASCADE,
+  CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `Users` (`user_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+```
 
 ## Contributing
 
