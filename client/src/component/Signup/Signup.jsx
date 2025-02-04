@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Row, Container } from 'react-bootstrap';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; 
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
@@ -11,6 +12,7 @@ export default function SignUp() {
   });
 
   const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate(); 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -19,31 +21,26 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); // Clear previous errors
-
-    // Check if passwords match
+    setErrorMessage(''); 
     if (formData.user_password !== formData.confirm_password) {
       setErrorMessage('Passwords do not match.');
       return;
     }
 
     try {
-      // Send a POST request to the backend
       const response = await axios.post('http://localhost:3001/api/users', {
         user_name: formData.user_name,
         user_password: formData.user_password,
         user_email: formData.user_email,
       });
 
-      // Check if the response indicates success
       if (response.data) {
         console.log('Sign-up successful:', response.data);
-        setErrorMessage(''); // Clear any previous errors
-        // Optionally, redirect the user to the login page or show a success message
+        navigate('/login');
       }
     } catch (error) {
       console.error('Sign-up error:', error);
-      setErrorMessage('An error occurred during sign-up. Please try again.');
+      setErrorMessage(error.response?.data?.message || 'An error occurred during sign-up. Please try again.');
     }
   };
 

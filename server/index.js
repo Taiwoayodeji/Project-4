@@ -21,23 +21,22 @@ app.get("/", (req, res) => {
   res.send("Welcome to the QAnswer Forum API!");
 });
 
-app.post("/signup", async (req, res) => {
-  const { user_name, email, password } = req.body;
+app.post("/api/users", async (req, res) => {
+  const { user_name, user_email, user_password } = req.body;
 
-  if (!user_name || !email || !password) {
+  if (!user_name || !user_email || !user_password) {
     return res.status(400).json({ error: "All fields are required" });
   }
 
   try {
     const [result] = await db.execute(
-      "INSERT INTO users (user_name, email, password) VALUES (?, ?, ?)",
-      [user_name, email, password]
+      "INSERT INTO users (user_name, user_email, user_password) VALUES (?, ?, ?)",
+      [user_name, user_email, user_password]
     );
 
-    res.status(201).json({ success: true, userId: result.insertId });
+    console.log(result);
   } catch (error) {
     console.error("Database error:", error);
-    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
