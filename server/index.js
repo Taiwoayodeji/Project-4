@@ -36,15 +36,7 @@ app.post("/api/users", async (req, res) => {
 
     console.log("Database result:", result);
 
-    if (result && typeof result === "object" && "affectedRows" in result) {
-      if (result.affectedRows === 1) {
-        res.status(201).json({ success: true, userId: result.insertId });
-      } else {
-        res.status(500).json({ error: "User creation failed" });
-      }
-    } else {
-      res.status(500).json({ error: "Unexpected database response format" });
-    }
+    res.status(201).json({ success: true, userId: result.insertId });
   } catch (error) {
     console.error("Database error:", error);
     res.status(500).json({ error: "Internal Server Error" });
