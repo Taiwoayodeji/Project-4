@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Row, Col, ListGroup, Accordion, Button, Form } from 'react-bootstrap';
+import { Row, Col, Accordion, Button, Form, ListGroup } from 'react-bootstrap';
 
 const QuestionsList = ({ user }) => {
   const [questions, setQuestions] = useState([]);
@@ -8,6 +8,8 @@ const QuestionsList = ({ user }) => {
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
   const [questionAnswers, setQuestionAnswers] = useState({});
+  const [newQuestionTitle, setNewQuestionTitle] = useState(""); // Store new question title
+  const [newQuestionBody, setNewQuestionBody] = useState(""); // Store new question body
 
   useEffect(() => {
     axios.get('http://localhost:3001/api/questions')
@@ -73,59 +75,105 @@ const QuestionsList = ({ user }) => {
       console.error('Error submitting answer:', error);
     });
   };
+  const handleQuestionSubmit = (event) => {
+    event.preventDefault();
+    if (!newQuestionTitle.trim() || !newQuestionBody.trim()) return;
+  
+    axios.post('http://localhost:3001/api/questions', {
+      title: newQuestionTitle,
+      body: newQuestionBody,
+      user_id: user?.user_id || "Anonymous",
+    })
+    .then(() => {
+      return axios.get('http://localhost:3001/api/questions'); // Refetch questions
+    })
+    .then(response => {
+      setQuestions(response.data);
+      setNewQuestionTitle("");
+      setNewQuestionBody("");
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  };
+  
+  
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="container">
-      <h2 className="text-center mb-4">Questions</h2>
-      <ListGroup>
-        {questions.map((question, index) => (
-          <ListGroup.Item key={question.question_id} className="mb-3">
-            <Row>
-              <Col>
-                <h5>{question.title}</h5>
-                <p>{question.body}</p>
-              </Col>
-            </Row>
+      {/* Ask a Question Section */}
+      <h2 className="text-center mb-4">Question & Answers</h2>
+      <Form onSubmit={handleQuestionSubmit} className="mb-4 p-3 border rounded shadow-sm">
+        <Form.Group className="mb-3">
+          <Form.Label>Title</Form.Label>
+          <Form.Control 
+            type="text" 
+            placeholder="Enter question title..." 
+            value={newQuestionTitle} 
+            onChange={(e) => setNewQuestionTitle(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Body</Form.Label>
+          <Form.Control 
+            as="textarea" 
+            rows={3} 
+            placeholder="Describe your question in detail..." 
+            value={newQuestionBody} 
+            onChange={(e) => setNewQuestionBody(e.target.value)}
+          />
+        </Form.Group>
+        <Button type="submit" variant="primary">Submit Question</Button>
+      </Form>
 
-            {/* Answers Dropdown */}
-            <Accordion>
-              <Accordion.Item eventKey={index.toString()}>
-                <Accordion.Header>View Answers</Accordion.Header>
-                <Accordion.Body>
-                  {questionAnswers[question.question_id]?.length > 0 ? (
-                    <ListGroup>
-                      {questionAnswers[question.question_id].map((answer) => (
-                        <ListGroup.Item key={answer.answer_id}>
-                          <p>{answer.body}</p>
-                          <small className="text-muted">Answered by: {answer.user_name}</small>
-                        </ListGroup.Item>
-                      ))}
-                    </ListGroup>
-                  ) : (
-                    <p>No answers yet.</p>
-                  )}
+      {/* Questions List */}
+      {questions.map((question, index) => (
+        <div key={question.question_id} className="mb-4 p-3 border rounded shadow-sm">
+          <Row>
+            <Col>
+              <h5>{question.title}</h5>
+              <p>{question.body}</p>
+            </Col>
+          </Row>
 
-                  {/* Answer Submission Form */}
-                  <Form onSubmit={(event) => handleAnswerSubmit(event, question.question_id)} className="mt-3">
-                    <Form.Group>
-                      <Form.Control 
-                        type="text" 
-                        placeholder="Write your answer..." 
-                        value={answers[question.question_id] || ""} 
-                        onChange={(event) => handleAnswerChange(event, question.question_id)}
-                      />
-                    </Form.Group>
-                    <Button type="submit" variant="primary" size="sm" className="mt-2">Submit Answer</Button>
-                  </Form>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+          {/* Answers Dropdown */}
+          <Accordion>
+            <Accordion.Item eventKey={index.toString()}>
+              <Accordion.Header>View Answers</Accordion.Header>
+              <Accordion.Body>
+                {questionAnswers[question.question_id]?.length > 0 ? (
+                  <ListGroup>
+                    {questionAnswers[question.question_id].map((answer) => (
+                      <ListGroup.Item key={answer.answer_id}>
+                        <p>{answer.body}</p>
+                        <small className="text-muted">Answered by: {answer.user_name}</small>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                ) : (
+                  <p>No answers yet.</p>
+                )}
+
+                {/* Answer Submission Form */}
+                <Form onSubmit={(event) => handleAnswerSubmit(event, question.question_id)} className="mt-3">
+                  <Form.Group>
+                    <Form.Control 
+                      type="text" 
+                      placeholder="Write your answer..." 
+                      value={answers[question.question_id] || ""} 
+                      onChange={(event) => handleAnswerChange(event, question.question_id)}
+                    />
+                  </Form.Group>
+                  <Button type="submit" variant="primary" size="sm" className="mt-2">Submit Answer</Button>
+                </Form>
+              </Accordion.Body>
+            </Accordion.Item>
+          </Accordion>
+        </div>
+      ))}
     </div>
   );
 };
