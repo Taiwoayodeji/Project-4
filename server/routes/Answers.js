@@ -3,8 +3,6 @@ import db from "../dbConnection.js";
 
 const answerRouter = express.Router();
 
-// GET /api/answers
-// GET /api/answers
 answerRouter.get("/", (req, res) => {
   const { question_id } = req.query;
 
@@ -25,18 +23,15 @@ answerRouter.get("/", (req, res) => {
   );
 });
 
-// POST /api/answers
 answerRouter.post("/", (req, res) => {
   const { question_id, user_id, body } = req.body;
 
-  // Validate required fields
   if (!question_id || !user_id || !body) {
     return res
       .status(400)
       .json({ error: "question_id, user_id, and body are required" });
   }
 
-  // Insert the answer into the database
   db.query(
     "INSERT INTO Answers (question_id, user_id, body) VALUES (?, ?, ?)",
     [question_id, user_id, body],

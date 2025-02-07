@@ -8,8 +8,8 @@ const QuestionsList = ({ user }) => {
   const [error, setError] = useState(null);
   const [answers, setAnswers] = useState({});
   const [questionAnswers, setQuestionAnswers] = useState({});
-  const [newQuestionTitle, setNewQuestionTitle] = useState(""); // Store new question title
-  const [newQuestionBody, setNewQuestionBody] = useState(""); // Store new question body
+  const [newQuestionTitle, setNewQuestionTitle] = useState(""); 
+  const [newQuestionBody, setNewQuestionBody] = useState(""); 
 
   useEffect(() => {
     axios.get('http://localhost:3001/api/questions')
@@ -85,7 +85,7 @@ const QuestionsList = ({ user }) => {
       user_id: user?.user_id || "Anonymous",
     })
     .then(() => {
-      return axios.get('http://localhost:3001/api/questions'); // Refetch questions
+      return axios.get('http://localhost:3001/api/questions'); 
     })
     .then(response => {
       setQuestions(response.data);
@@ -128,9 +128,9 @@ const QuestionsList = ({ user }) => {
         </Form.Group>
         <Button type="submit" variant="primary">Submit Question</Button>
       </Form>
-
+  
       {/* Questions List */}
-      {questions.map((question, index) => (
+      {questions.slice().reverse().map((question, index) => (
         <div key={question.question_id} className="mb-4 p-3 border rounded shadow-sm">
           <Row>
             <Col>
@@ -138,7 +138,7 @@ const QuestionsList = ({ user }) => {
               <p>{question.body}</p>
             </Col>
           </Row>
-
+  
           {/* Answers Dropdown */}
           <Accordion>
             <Accordion.Item eventKey={index.toString()}>
@@ -156,7 +156,7 @@ const QuestionsList = ({ user }) => {
                 ) : (
                   <p>No answers yet.</p>
                 )}
-
+  
                 {/* Answer Submission Form */}
                 <Form onSubmit={(event) => handleAnswerSubmit(event, question.question_id)} className="mt-3">
                   <Form.Group>
@@ -175,7 +175,7 @@ const QuestionsList = ({ user }) => {
         </div>
       ))}
     </div>
-  );
+  );  
 };
 
 export default QuestionsList;

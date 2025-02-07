@@ -10,12 +10,11 @@ import "./styles/style.css";
 
 function App() {
   const [user, setUser] = useState({
-    user_id: null, // Initially, user_id should be null (not logged in)
+    user_id: null,
     user_name: "",
   });
 
   const handleSignOut = () => {
-    // Clear user data and redirect to login page
     setUser({
       user_id: null,
       user_name: "",

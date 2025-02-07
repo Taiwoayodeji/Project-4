@@ -9,7 +9,7 @@ export default function Login({ setUser }) {
     user_password: '',
   });
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Use useNavigate hook for navigation
+  const navigate = useNavigate(); 
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -34,7 +34,7 @@ export default function Login({ setUser }) {
           user_name: response.data.user_name,
         });
         console.log('Login successful', response.data);
-        navigate("/questions"); // Redirect to questions page after successful login
+        navigate("/questions"); 
       } else {
         setError("Invalid username or password");
       }
