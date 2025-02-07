@@ -3,15 +3,17 @@ import db from "../dbConnection.js";
 
 const answerRouter = express.Router();
 
+// GET /api/answers
+// GET /api/answers
 answerRouter.get("/", (req, res) => {
-  const { question_id, user_id } = req.query;
+  const { question_id } = req.query;
 
   db.query(
-    `SELECT * FROM Answers 
+    `SELECT Answers.*, users.user_name 
+     FROM Answers 
      INNER JOIN users ON Answers.user_id = users.user_id
-     INNER JOIN Questions ON Answers.question_id = Questions.question_id
-     WHERE Answers.question_id = ? AND Answers.user_id = ?`,
-    [question_id, user_id],
+     WHERE Answers.question_id = ?`,
+    [question_id],
     (err, result) => {
       if (err) {
         console.error("Error in fetching answers", err);
@@ -23,9 +25,18 @@ answerRouter.get("/", (req, res) => {
   );
 });
 
+// POST /api/answers
 answerRouter.post("/", (req, res) => {
   const { question_id, user_id, body } = req.body;
 
+  // Validate required fields
+  if (!question_id || !user_id || !body) {
+    return res
+      .status(400)
+      .json({ error: "question_id, user_id, and body are required" });
+  }
+
+  // Insert the answer into the database
   db.query(
     "INSERT INTO Answers (question_id, user_id, body) VALUES (?, ?, ?)",
     [question_id, user_id, body],
