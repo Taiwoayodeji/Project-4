@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { Button, Col, Form, Row, Container } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
-    user_name: '',
+    user_name: '',   
     user_password: '',
     user_email: '',
     confirm_password: '',
   });
 
   const [errorMessage, setErrorMessage] = useState('');
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,28 +21,52 @@ export default function SignUp() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setErrorMessage(''); 
+    setErrorMessage(''); // Clear any previous error message
+  
+    // Check if passwords match
     if (formData.user_password !== formData.confirm_password) {
       setErrorMessage('Passwords do not match.');
       return;
     }
-
+  
     try {
+      // Send sign-up request to the server
       const response = await axios.post('http://localhost:3001/api/users', {
         user_name: formData.user_name,
         user_password: formData.user_password,
         user_email: formData.user_email,
       });
-
-      if (response.data) {
+  
+      console.log("Backend response:", response.data); // Log the response
+  
+      // Handle successful sign-up
+      if (response.data.success) {
         console.log('Sign-up successful:', response.data);
+  
+        // Clear the form
+        setFormData({
+          user_name: '',
+          user_password: '',
+          user_email: '',
+          confirm_password: '',
+        });
+  
+        // Clear error message after success
+        setErrorMessage('');
+  
+        // Redirect to the login page
         navigate('/login');
+      } else {
+        // Handle backend errors (e.g., duplicate email)
+        setErrorMessage(response.data.error || 'Sign-up failed. Please try again.');
       }
     } catch (error) {
       console.error('Sign-up error:', error);
-      setErrorMessage(error.response?.data?.message || 'An error occurred during sign-up. Please try again.');
+      console.error('Error response:', error.response); // Log the error response
+      // Display a fallback error message if the backend did not provide one
+      setErrorMessage(error.response?.data?.error || 'An error occurred during sign-up. Please try again.');
     }
-  };
+  };  
 
   return (
     <Container className="mt-5">

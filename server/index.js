@@ -29,14 +29,25 @@ app.post("/api/users", async (req, res) => {
   }
 
   try {
-    const [result] = await db.execute(
+    const result = await db.execute(
       "INSERT INTO users (user_name, user_email, user_password) VALUES (?, ?, ?)",
       [user_name, user_email, user_password]
     );
 
-    console.log(result);
+    console.log("Database result:", result);
+
+    if (result && typeof result === "object" && "affectedRows" in result) {
+      if (result.affectedRows === 1) {
+        res.status(201).json({ success: true, userId: result.insertId });
+      } else {
+        res.status(500).json({ error: "User creation failed" });
+      }
+    } else {
+      res.status(500).json({ error: "Unexpected database response format" });
+    }
   } catch (error) {
     console.error("Database error:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

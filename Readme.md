@@ -58,9 +58,9 @@ This is a simple Q/A (Questions and Answers) web application where users can log
 ```sql
 CREATE TABLE `Users` (
   `user_id` int NOT NULL AUTO_INCREMENT,
-  `user_name` varchar(45) NOT NULL,
+  `user_name` varchar(255) NOT NULL,
+  `user_email` varchar(255) NOT NULL,
   `user_password` varchar(255) NOT NULL,
-  `user_email` varchar(45) NOT NULL,
   PRIMARY KEY (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 ```
