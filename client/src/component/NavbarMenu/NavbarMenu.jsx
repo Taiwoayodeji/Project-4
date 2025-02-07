@@ -22,7 +22,7 @@ export default function NavbarMenu({ user, handleSignOut }) {
           <Nav className="ms-auto">
             {user?.user_id ? (
               <>
-                <span className="me-3">Good Morning, {user?.user_name}</span>
+                <span className="me-3">Welcome back, {user?.user_name}</span>
                 <button
                   onClick={handleSignOut}
                   className="btn btn-danger"
