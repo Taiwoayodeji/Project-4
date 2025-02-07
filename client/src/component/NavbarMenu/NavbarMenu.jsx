@@ -10,7 +10,12 @@ export default function NavbarMenu({ user, handleSignOut }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav" className="d-flex justify-content-between">
           <Nav>
-            <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
+            {/* Conditionally render "Sign Up" or "Questions" link */}
+            {user?.user_id ? (
+              <Nav.Link as={Link} to="/questions">Questions</Nav.Link>
+            ) : (
+              <Nav.Link as={Link} to="/signup">Sign Up</Nav.Link>
+            )}
           </Nav>
           <Nav className="d-flex align-items-center">
             {user?.user_id ? (
