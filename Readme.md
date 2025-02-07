@@ -22,6 +22,9 @@ This is a simple Q/A (Questions and Answers) web application where users can log
 
 ## Installation
 
+- client -> npm install react react-router-dom bootstrap axios
+- server -> npm install express mysql2 cors dotenv nodemon
+
 ### Prerequisites
 
 - Node.js and npm installed
@@ -30,18 +33,15 @@ This is a simple Q/A (Questions and Answers) web application where users can log
 ### Steps
 
 1. Clone the repository:
-   ```bash
    git clone https://github.com/Taiwoayodeji/Project-4
    cd Project-4
-   ```
+
 2. Install dependencies:
-   ```bash
    npm install
-   ```
-3. Start the development server:
-   ```bash
+3. Start the development servers:
    npm start
-   ```
+   node index.js
+
 4. Open the app in your browser at `http://localhost:3000`
 
 ## API Endpoints (Assumed)
@@ -103,6 +103,6 @@ CREATE TABLE `Answers` (
 4. Push to your branch (`git push origin feature-name`).
 5. Open a pull request.
 
-## License
+## Author
 
-This project is licensed under the MIT License.
+Deji Taiwo - [@LinkedIn](https://www.linkedin.com/in/taiwo-a-80346223b/)
